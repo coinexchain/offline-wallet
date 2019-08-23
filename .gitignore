@@ -1,0 +1,10 @@
+.venv
+.vscode
+.env
+*/*.pyc
+.idea/
+.DS_Store
+log/
+run/
+
+*.swp

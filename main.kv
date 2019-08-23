@@ -1,0 +1,47 @@
+#:import ZBarCam zbarcam.ZBarCam
+#:import ZBarSymbol pyzbar.pyzbar.ZBarSymbol
+BoxLayout:
+    orientation: 'vertical'
+    ZBarCam:
+        id: zbarcam
+        # optional, by default checks all types
+        code_types: ZBarSymbol.QRCODE, ZBarSymbol.EAN13
+        size: 500, 200
+    Label:
+        size: 500, 250
+        text: ', '.join([str(symbol.data) for symbol in zbarcam.symbols])
+        on_text: zbarcam.stop()
+        text_size: self.size
+        bold: True
+        width: 150
+        halign: 'left'
+        valign: 'middle'
+        font_size: '18sp'
+        color: 1, 1, 0, 1
+        canvas.before:
+            Color:
+                rgba: 1, .1, 1, .5
+            Rectangle:
+                pos: self.pos
+                size: self.size
+    Label:
+        size: 500, 250
+        text: 'signature: '
+        text_size: self.size
+        bold: True
+        width: 150
+        halign: 'center'
+        valign: 'middle'
+        font_size: '18sp'
+        color: 1, 1, 0, 1
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, .5
+            Rectangle:
+                pos: self.pos
+                size: self.size
+    Button:
+        text: "open camera"
+        on_press: zbarcam.start()
+
+
