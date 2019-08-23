@@ -13,7 +13,7 @@ BoxLayout:
         text: ', '.join([str(symbol.data) for symbol in zbarcam.symbols])
         on_text:
             zbarcam.stop()
-            display.text = app.signature()
+            display.text = app.signature(str(zbarcam.symbols[0].data))
         text_size: self.size
         bold: True
         width: 150
@@ -52,5 +52,23 @@ BoxLayout:
         font_size: '25sp'
         markup: True
         on_press: zbarcam.start()
-
-
+    TextInput:
+        id: username
+        multiline: False
+        halign:'center'
+        cursor_width: 3
+        text: 'name'
+        on_text_validate: print(self.text);
+    TextInput:
+        id: password
+        multiline: False
+        halign:'center'
+        cursor_width: 3
+        text: 'password'
+        on_text_validate: print(self.text);
+    Button:
+        text: "generate new key"
+        on_press: app.add_key(username.text, password.text)
+    Button:
+        text: "show my keys"
+        on_press: app.list_keys()
