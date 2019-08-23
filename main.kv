@@ -2,73 +2,145 @@
 #:import ZBarSymbol pyzbar.pyzbar.ZBarSymbol
 BoxLayout:
     orientation: 'vertical'
-    padding: 20
-    ZBarCam:
-        id: zbarcam
-        # optional, by default checks all types
-        code_types: ZBarSymbol.QRCODE, ZBarSymbol.EAN13
-        size: 500, 200
-    Label:
-        size: 500, 250
-        text: ', '.join([str(symbol.data) for symbol in zbarcam.symbols])
-        on_text:
-            zbarcam.stop()
-            display.text = app.signature(str(zbarcam.symbols[0].data))
-        text_size: self.size
-        bold: True
-        width: 150
-        halign: 'left'
-        valign: 'middle'
-        font_size: '18sp'
-        color: 1, 1, 0, 1
-        canvas.before:
-            Color:
-                rgba: 1, .1, 1, .5
-            Rectangle:
-                pos: self.pos
-                size: self.size
-    Label:
-        id: display
-        size: 500, 250
-        text: 'signature: '
-        text_size: self.size
-        bold: True
-        width: 150
-        halign: 'center'
-        valign: 'middle'
-        font_size: '18sp'
-        color: 1, 1, 0, 1
-        canvas.before:
-            Color:
-                rgba: 1, 1, 1, .5
-            Rectangle:
-                pos: self.pos
-                size: self.size
-    Button:
-        text: "open camera"
-        text_size: self.size
-        halign: 'center'
-        valign: 'middle'
-        font_size: '25sp'
-        markup: True
-        on_press: zbarcam.start()
-    TextInput:
-        id: username
-        multiline: False
-        halign:'center'
-        cursor_width: 3
-        text: 'name'
-        on_text_validate: print(self.text);
-    TextInput:
-        id: password
-        multiline: False
-        halign:'center'
-        cursor_width: 3
-        text: 'password'
-        on_text_validate: print(self.text);
-    Button:
-        text: "generate new key"
-        on_press: app.add_key(username.text, password.text)
-    Button:
-        text: "show my keys"
-        on_press: app.list_keys()
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, 1
+        ZBarCam:
+            id: zbarcam
+            # optional, by default checks all types
+            code_types: ZBarSymbol.QRCODE, ZBarSymbol.EAN13
+            size: 500, 200
+        Label:
+            size: 500, 250
+            text: ', '.join([str(symbol.data) for symbol in zbarcam.symbols])
+            on_text:
+                zbarcam.stop()
+                display.text = app.signature(str(zbarcam.symbols[0].data))
+            text_size: self.size
+            padding: 20, 20
+            multiline: True
+            line_height: 1.1
+            bold: True
+            width: 150
+            halign: 'left'
+            valign: 'top'
+            font_size: '16sp'
+            color: 0, 0, 0, 1
+            canvas.before:
+                Color:
+                    rgba: 1, 1, .8, 0.5
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, 1
+        BoxLayout:
+            orientation: 'vertical'
+            Label:
+                id: label1
+                size_hint: 1, .5
+                text_size: self.size
+                text: "Output QR code: "
+                bold: True
+                width: 150
+                halign: 'center'
+                valign: 'middle'
+                font_size: '18sp'
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+            Label:
+                id: display
+                size_hint: 1, 1
+                text_size: self.size
+                bold: True
+                width: 150
+                padding: 20, 20
+                halign: 'left'
+                valign: 'top'
+                font_size: '18sp'
+                on_text: qrcode.reload()
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, .8, 0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+        Image:
+            id: qrcode
+            source: './1.png'
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: 1, 0.3
+        BoxLayout:
+            orientation: 'horizontal'
+            Label:
+                size_hint: 0.2, 1
+                text: 'username: '
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                font_size: '18sp'
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+            TextInput:
+                id: username
+                padding: 20, 10
+                multiline: False
+                font_size: '18sp'
+                bold: True
+                halign:'left'
+                on_text_validate: print(self.text)
+        BoxLayout:
+            orientation: 'horizontal'
+            Label:
+                size_hint: 0.2, 1
+                text: 'password: '
+                bold: True
+                halign: 'center'
+                valign: 'middle'
+                font_size: '18sp'
+                canvas.before:
+                    Color:
+                        rgba: 1, 1, 1, 0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+            TextInput:
+                id: password
+                padding: 20, 10
+                multiline: False
+                font_size: '18sp'
+                bold: True
+                halign:'left'
+                on_text_validate: print(self.text)
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, 0.2
+        Button:
+            text: "open camera"
+            text_size: self.size
+            bold: True
+            halign: 'center'
+            valign: 'middle'
+            font_size: '20sp'
+            markup: True
+            on_press: zbarcam.start()
+        Button:
+            text: "generate new key"
+            font_size: '20sp'
+            bold: True
+            on_press: app.add_key(username.text, password.text)
+        Button:
+            text: "show my keys"
+            font_size: '20sp'
+            bold: True
+            on_press: app.list_keys()

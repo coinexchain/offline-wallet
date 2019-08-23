@@ -5,6 +5,7 @@ from kivy.lang import Builder
 
 import os
 import pexpect
+import pyqrcode
 
 MODULE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
@@ -12,15 +13,19 @@ MODULE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 class DemoApp(App):
 
     def build(self):
-        return Builder.load_file("/Users/helldealer/offline-wallet/main.kv")
+        return Builder.load_file(os.path.join(MODULE_DIRECTORY, "main.kv"))
 
     def signature(self, s):
-        self.build_sig(s)
-
-        return 'sig'
+        unsigned_str = self.build_sig(s)
+        signed_str = self.sign(unsigned_str)
+        self.create_qrcode(signed_str)
+        return signed_str
 
     def build_sig(self, s):
-        pass
+        return 'un-signature'
+
+    def sign(self, s):
+        return 'signature'
 
     # todo: repeat senario
     def add_key(self, name, password):
@@ -46,6 +51,10 @@ class DemoApp(App):
         child.logfile = sys.stdout
         child.expect('name')
         child.close()
+
+    def create_qrcode(self, s):
+        url = pyqrcode.create(s, error='L')
+        url.png('1.png', scale=6, module_color=[0, 0, 0, 128], background=[0xff, 0xff, 0xcc])
 
 
 if __name__ == '__main__':
