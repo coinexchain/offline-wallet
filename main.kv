@@ -2,6 +2,7 @@
 #:import ZBarSymbol pyzbar.pyzbar.ZBarSymbol
 BoxLayout:
     orientation: 'vertical'
+    padding: 20
     ZBarCam:
         id: zbarcam
         # optional, by default checks all types
@@ -10,7 +11,9 @@ BoxLayout:
     Label:
         size: 500, 250
         text: ', '.join([str(symbol.data) for symbol in zbarcam.symbols])
-        on_text: zbarcam.stop()
+        on_text:
+            zbarcam.stop()
+            display.text = app.signature()
         text_size: self.size
         bold: True
         width: 150
@@ -25,6 +28,7 @@ BoxLayout:
                 pos: self.pos
                 size: self.size
     Label:
+        id: display
         size: 500, 250
         text: 'signature: '
         text_size: self.size
@@ -42,6 +46,11 @@ BoxLayout:
                 size: self.size
     Button:
         text: "open camera"
+        text_size: self.size
+        halign: 'center'
+        valign: 'middle'
+        font_size: '25sp'
+        markup: True
         on_press: zbarcam.start()
 
 
