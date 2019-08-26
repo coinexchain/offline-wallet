@@ -3,6 +3,8 @@
 .env
 */*.pyc
 .idea/
+*.png
+*.log
 .DS_Store
 log/
 run/
