@@ -39,6 +39,10 @@ class KeyQrCode(BoxLayout):
     pass
 
 
+class KeyImport(BoxLayout):
+    pass
+
+
 class BearWalletApp(App):
     key_resp = StringProperty("")
     keys_list = StringProperty()
@@ -51,6 +55,7 @@ class BearWalletApp(App):
     sequence = ''
 
     def build(self):
+        self.remove_qrcode()
         return Wallet()
 
     @staticmethod
@@ -72,6 +77,10 @@ class BearWalletApp(App):
     @staticmethod
     def build_key_qrcode():
         return KeyQrCode()
+
+    @staticmethod
+    def build_key_import():
+        return KeyImport()
 
     def signature(self, s):
         print(s)
@@ -105,6 +114,18 @@ class BearWalletApp(App):
         print(type(s))
         self.key_resp = s
         self.create_qrcode(s, newAddress_png_name)
+
+    def import_key(self, name, password, mnemonic):
+        recover_key = lib.RecoverKey
+        recover_key.restype = ctypes.c_char_p
+        name = name.encode()
+        mnemonic = mnemonic.encode()
+        password = password.encode()
+        key = recover_key(name, mnemonic, password, "", 0, 0)
+        print(key)
+        s = key.decode('utf-8')
+        self.key_resp = s
+        self.create_qrcode(s, address_png_name)
 
     def get_key(self, name):
         list_keys = lib.ListKeys

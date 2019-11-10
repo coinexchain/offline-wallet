@@ -9,6 +9,9 @@
         text: "add key"
         on_press: root.clear_widgets(); root.add_widget(app.build_key_ui())
     Button:
+        text: "import key"
+        on_press: root.clear_widgets(); root.add_widget(app.build_key_import())
+    Button:
         text: "list keys"
         on_press: root.clear_widgets(); root.add_widget(app.build_keys_ui()); app.list_keys();
     Button
@@ -326,6 +329,114 @@
         bold: True
         on_press: app.key_resp=""; root.clear_widgets(); root.add_widget(app.build_wallet_ui()); app.remove_qrcode()
 
+<KeyImport>
+    orientation: 'vertical'
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, 0.2
+        Label:
+            size_hint: 0.2, 1
+            text: 'username: '
+            bold: True
+            halign: 'center'
+            valign: 'middle'
+            font_size: '18sp'
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 0.5
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        TextInput:
+            id: keyname
+            padding: 20, 10
+            multiline: False
+            font_size: '18sp'
+            bold: True
+            halign:'left'
+            on_text_validate: print(self.text)
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, 0.2
+        Label:
+            size_hint: 0.2, 1
+            text: 'mnemonic: '
+            bold: True
+            halign: 'center'
+            valign: 'middle'
+            font_size: '18sp'
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 0.5
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        TextInput:
+            id: mnemonic
+            padding: 20, 10
+            multiline: False
+            font_size: '18sp'
+            bold: True
+            halign:'left'
+            on_text_validate: print(self.text)
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, 0.2
+        Label:
+            size_hint: 0.2, 1
+            text: 'new password: '
+            bold: True
+            halign: 'center'
+            valign: 'middle'
+            font_size: '18sp'
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 0.5
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        TextInput:
+            id: newpassword
+            padding: 20, 10
+            multiline: False
+            font_size: '18sp'
+            bold: True
+            halign:'left'
+            on_text_validate: print(self.text)
+    Button:
+        size_hint: 1, 0.2
+        text: "import key"
+        font_size: '14sp'
+        bold: True
+        on_press: app.import_key(keyname.text, newpassword.text, mnemonic.text); key_qrcode.reload()
+    Label:
+        size_hint: 1, 1
+        text_size: self.size
+        padding: 20, 20
+        multiline: True
+        text: app.key_resp
+        bold: True
+        halign: 'left'
+        valign: 'top'
+        font_size: '18sp'
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 0.5
+            Rectangle:
+                pos: self.pos
+                size: self.size
+    Image:
+        id: key_qrcode
+        size: self.size
+        nocache: True
+        source: 'Address.png'
+    Button:
+        size_hint: 1, 0.2
+        text: "home"
+        font_size: '14sp'
+        bold: True
+        on_press: app.key_resp=""; root.clear_widgets(); root.add_widget(app.build_wallet_ui()); app.remove_qrcode()
+
 <keys>
     orientation: 'vertical'
     ScrollView:
@@ -344,7 +455,7 @@
             padding: 10, 10
             halign: 'left'
             valign: 'top'
-            font_size: '12sp'
+            font_size: '14sp'
             canvas.before:
                 Color:
                     rgba: 1, 1, 1, 0.5
@@ -402,6 +513,7 @@
         id: keyInfo
         size_hint: 1, 1
         text: app.key_info
+        text_size: self.width, None
         bold: True
         halign: 'left'
         valign: 'middle'
