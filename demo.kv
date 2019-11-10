@@ -11,7 +11,9 @@
     Button:
         text: "list keys"
         on_press: root.clear_widgets(); root.add_widget(app.build_keys_ui()); app.list_keys();
-
+    Button
+        text: "get key QRcode"
+        on_press: root.clear_widgets(); root.add_widget(app.build_key_qrcode())
 <Signature>:
     orientation: 'vertical'
     BoxLayout:
@@ -24,10 +26,10 @@
             size: 500, 200
         Label:
             size: 500, 250
-            text: ', '.join([str(symbol.data) for symbol in zbarcam.symbols])
+            text: ', '.join([str(symbol.data.decode('utf-8')) for symbol in zbarcam.symbols])
             on_text:
                 zbarcam.stop()
-                display.text = app.signature(''.join([str(symbol.data) for symbol in zbarcam.symbols]))
+                display.text = app.signature(''.join([str(symbol.data.decode('utf-8')) for symbol in zbarcam.symbols]))
             text_size: self.size
             padding: 20, 20
             multiline: True
@@ -85,20 +87,149 @@
         Image:
             id: qrcode
             size: self.size
-            source: './1.png'
+            source: 'signature.png'
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, 0.12
+        Label:
+            size_hint: 0.4, 1
+            text: 'input key name: '
+            bold: True
+            halign: 'left'
+            valign: 'middle'
+            text_size: self.size
+            padding: 10, 0
+            font_size: '16sp'
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 0.5
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        TextInput:
+            id: keyName
+            size_hint: 0.4, 1
+            padding: 20, 10
+            multiline: False
+            font_size: '16sp'
+            bold: True
+            halign:'left'
+            on_text_validate: print(self.text); app.keyName=self.text
+        Label:
+            size_hint: 0.4, 1
+            text: 'input key password: '
+            bold: True
+            halign: 'left'
+            valign: 'middle'
+            text_size: self.size
+            padding: 10, 0
+            font_size: '16sp'
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 0.5
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        TextInput:
+            size_hint: 0.4, 1
+            id: keyPassword
+            padding: 20, 10
+            multiline: False
+            font_size: '16sp'
+            bold: True
+            halign:'left'
+            on_text_validate: print(self.text); app.keyPassword=self.text
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, 0.12
+        Label:
+            size_hint: 0.33, 1
+            text: 'input chain id: '
+            text_size: self.size
+            padding: 10, 0
+            bold: True
+            halign: 'left'
+            valign: 'middle'
+            font_size: '16sp'
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 0.5
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        TextInput:
+            id: chainId
+            padding: 20, 10
+            multiline: False
+            font_size: '16sp'
+            bold: True
+            halign:'left'
+            on_text_validate: print(self.text); app.chainId=self.text
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, 0.12
+        Label:
+            size_hint: 0.33, 1
+            text: 'input account number: '
+            bold: True
+            halign: 'left'
+            valign: 'middle'
+            text_size: self.size
+            padding: 10, 0
+            font_size: '16sp'
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 0.5
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        TextInput:
+            id: accountNumber
+            padding: 20, 10
+            multiline: False
+            font_size: '16sp'
+            bold: True
+            halign:'left'
+            on_text_validate: print(self.text); app.accountNumber=self.text
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, 0.12
+        Label:
+            size_hint: 0.33, 1
+            text: 'input account sequence: '
+            bold: True
+            halign: 'left'
+            valign: 'middle'
+            text_size: self.size
+            padding: 10, 0
+            font_size: '16sp'
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 0.5
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        TextInput:
+            id: sequence
+            padding: 20, 10
+            multiline: False
+            font_size: '16sp'
+            bold: True
+            halign:'left'
+            on_text_validate: print(self.text); app.sequence=self.text
     BoxLayout:
         orientation: "horizontal"
         size_hint: 1, 0.1
         Button:
             size_hint: 1, 1
-            text: "reopen"
+            text: "enter"
             text_size: self.size
             bold: True
             halign: 'center'
             valign: 'middle'
             font_size: '20sp'
             markup: True
-            on_press: zbarcam.start()
+            on_press: app.keyName=keyName.text; print(app.keyName); app.keyPassword=keyPassword.text; app.accountNumber=accountNumber.text; app.sequence=sequence.text; app.chainId=chainId.text
         Button:
             size_hint: 1, 1
             text: "home"
@@ -165,7 +296,7 @@
         text: "generate new key"
         font_size: '14sp'
         bold: True
-        on_press: app.add_key(username.text, password.text)
+        on_press: app.add_key(username.text, password.text); key_qrcode.reload()
     Label:
         size_hint: 1, 1
         text_size: self.size
@@ -176,7 +307,6 @@
         halign: 'left'
         valign: 'top'
         font_size: '18sp'
-        on_text: key_qrcode.reload()
         canvas.before:
             Color:
                 rgba: 1, 1, 1, 0.5
@@ -186,39 +316,114 @@
     Image:
         id: key_qrcode
         size: self.size
-        source: './2.png'
+        source: 'newAddress.png'
     Button:
         size_hint: 1, 0.2
         text: "home"
         font_size: '14sp'
         bold: True
-        on_press: app.key_resp=""; root.clear_widgets(); root.add_widget(app.build_wallet_ui())
+        on_press: app.key_resp=""; root.clear_widgets(); root.add_widget(app.build_wallet_ui()); app.remove_qrcode()
 
 <keys>
     orientation: 'vertical'
     ScrollView:
-        BoxLayout:
-            orientation: 'vertical'
-            Label:
-                size_hint: 1, 1
-                text_size: self.size
-                padding: 20, 20
-                multiline: True
-                text: app.keys_list
-                bold: True
-                halign: 'left'
-                valign: 'top'
-                font_size: '18sp'
-                canvas.before:
-                    Color:
-                        rgba: 1, 1, 1, 0.5
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
+        do_scroll_x: True
+        do_scroll_y: True
+        halign: 'left'
+        valign: 'top'
 
+        Label:
+            size_hint: 1, None
+            height: self.texture_size[0]
+            text_size: self.width, None
+            multiline: True
+            text: app.keys_list
+            bold: True
+            padding: 10, 10
+            halign: 'left'
+            valign: 'top'
+            font_size: '12sp'
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 0.5
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+    Label:
+        size_hint: 1, 0.1
+        text: 'Note: Detailed information in addressBook.txt in current directory !'
+        bold: True
+        padding: 10, 20
+        text_size: self.size
+        halign: 'left'
+        valign: 'top'
+        font_size: '16sp'
+        canvas.before:
+            Color:
+                rgba: 0.2, 0.8, 1, 0.5
+            Rectangle:
+                pos: self.pos
+                size: self.size
     Button:
         size_hint: 1, 0.1
         text: "home"
         font_size: '14sp'
         bold: True
         on_press: app.keys_list=""; root.clear_widgets(); root.add_widget(app.build_wallet_ui())
+<KeyQrCode>
+    orientation: 'vertical'
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 1, 0.2
+        Label:
+            size_hint: 0.2, 1
+            text: 'key name: '
+            bold: True
+            halign: 'center'
+            valign: 'middle'
+            font_size: '18sp'
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 0.5
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        TextInput:
+            id: keyNameForQrCode
+            padding: 20, 10
+            multiline: False
+            font_size: '18sp'
+            bold: True
+            halign:'left'
+            on_text_validate: print(self.text)
+    Label:
+        id: keyInfo
+        size_hint: 1, 1
+        text: app.key_info
+        bold: True
+        halign: 'center'
+        valign: 'middle'
+        font_size: '18sp'
+        canvas.before:
+            Color:
+                rgba: 0.8, 1, 1, 0.5
+            Rectangle:
+                pos: self.pos
+                size: self.size
+    Image:
+        id: address_qrcode
+        size_hint: 1, 1
+        size: self.size
+        source: 'address.png'
+    Button:
+        size_hint: 1, 0.2
+        text: "Generate address QrCode"
+        font_size: '14sp'
+        bold: True
+        on_press: app.get_key(keyNameForQrCode.text); address_qrcode.reload()
+    Button:
+        size_hint: 1, 0.2
+        text: "home"
+        font_size: '14sp'
+        bold: True
+        on_press: app.key_info=''; address_qrcode.text=''; app.remove_qrcode(); root.clear_widgets(); root.add_widget(app.build_wallet_ui())
