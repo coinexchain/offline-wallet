@@ -87,6 +87,7 @@
         Image:
             id: qrcode
             size: self.size
+            nocache: True
             source: 'signature.png'
     BoxLayout:
         orientation: 'horizontal'
@@ -316,7 +317,8 @@
     Image:
         id: key_qrcode
         size: self.size
-        source: 'newAddress.png'
+        nocache: True
+        source: './newAddress.png'
     Button:
         size_hint: 1, 0.2
         text: "home"
@@ -401,8 +403,10 @@
         size_hint: 1, 1
         text: app.key_info
         bold: True
-        halign: 'center'
+        halign: 'left'
         valign: 'middle'
+        padding: 20, 15
+        multiline: True
         font_size: '18sp'
         canvas.before:
             Color:
@@ -413,6 +417,7 @@
     Image:
         id: address_qrcode
         size_hint: 1, 1
+        nocache: True
         size: self.size
         source: 'address.png'
     Button:

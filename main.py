@@ -17,7 +17,7 @@ address_png_name = 'address.png'
 
 
 class Wallet(BoxLayout):
-    lib.BearInit('tmp'.encode("utf-8"))
+    lib.BearInit('data'.encode("utf-8"))
     pass
 
 
@@ -39,7 +39,7 @@ class KeyQrCode(BoxLayout):
     pass
 
 
-class DemoApp(App):
+class BearWalletApp(App):
     key_resp = StringProperty("")
     keys_list = StringProperty()
     key_info = StringProperty()
@@ -140,14 +140,12 @@ class DemoApp(App):
         address_book = 'addressBook.txt'
         file = open(address_book, 'w')
         file.write(out_to_file)
-        
-    @staticmethod
-    def create_qrcode(s, path):
+
+    def create_qrcode(self, s, path):
         url = pyqrcode.create(s, error='L')
         url.png(path, scale=6, module_color=[0, 0, 0, 128], background=[0xff, 0xff, 0xcc])
 
-    @staticmethod
-    def remove_qrcode():
+    def remove_qrcode(self):
         if os.path.exists(signature_png_name):
             os.remove(signature_png_name)
         if os.path.exists(newAddress_png_name):
@@ -157,4 +155,4 @@ class DemoApp(App):
 
 
 if __name__ == '__main__':
-    DemoApp().run()
+    BearWalletApp().run()

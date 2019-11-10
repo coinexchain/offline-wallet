@@ -9,5 +9,9 @@
 log/
 run/
 tmp/
-
+build/
+data/
+dist/
+address.txt
+*.spec
 *.swp
