@@ -3,20 +3,31 @@
 <Wallet>
     orientation: "vertical"
     Button:
-        text: "signature"
-        on_press: root.clear_widgets(); root.add_widget(app.build_signature_ui())
-    Button:
-        text: "add key"
+        text: "Add Key"
+        bold: True
+        font_size: '16sp'
         on_press: root.clear_widgets(); root.add_widget(app.build_key_ui())
     Button:
-        text: "import key"
+        text: "Import Key"
+        bold: True
+        font_size: '16sp'
         on_press: root.clear_widgets(); root.add_widget(app.build_key_import())
     Button:
-        text: "list keys"
+        text: "List Keys"
+        bold: True
+        font_size: '16sp'
         on_press: root.clear_widgets(); root.add_widget(app.build_keys_ui()); app.list_keys();
     Button
-        text: "get key QRcode"
+        text: "Generate key QRcode"
+        bold: True
+        font_size: '16sp'
         on_press: root.clear_widgets(); root.add_widget(app.build_key_qrcode())
+    Button:
+        text: "Signature"
+        bold: True
+        font_size: '16sp'
+        on_press: root.clear_widgets(); root.add_widget(app.build_signature_ui())
+
 <Signature>:
     orientation: 'vertical'
     BoxLayout:
@@ -226,7 +237,7 @@
         size_hint: 1, 0.1
         Button:
             size_hint: 1, 1
-            text: "enter"
+            text: "Confirm"
             text_size: self.size
             bold: True
             halign: 'center'
@@ -236,7 +247,7 @@
             on_press: app.keyName=keyName.text; print(app.keyName); app.keyPassword=keyPassword.text; app.accountNumber=accountNumber.text; app.sequence=sequence.text; app.chainId=chainId.text
         Button:
             size_hint: 1, 1
-            text: "home"
+            text: "Back Home"
             text_size: self.size
             bold: True
             halign: 'center'
@@ -297,7 +308,7 @@
             on_text_validate: print(self.text)
     Button:
         size_hint: 1, 0.2
-        text: "generate new key"
+        text: "Generate New Key"
         font_size: '14sp'
         bold: True
         on_press: app.add_key(username.text, password.text); key_qrcode.reload()
@@ -324,7 +335,7 @@
         source: './newAddress.png'
     Button:
         size_hint: 1, 0.2
-        text: "home"
+        text: "Back Home"
         font_size: '14sp'
         bold: True
         on_press: app.key_resp=""; root.clear_widgets(); root.add_widget(app.build_wallet_ui()); app.remove_qrcode()
@@ -405,7 +416,7 @@
             on_text_validate: print(self.text)
     Button:
         size_hint: 1, 0.2
-        text: "import key"
+        text: "Import Key"
         font_size: '14sp'
         bold: True
         on_press: app.import_key(keyname.text, newpassword.text, mnemonic.text); key_qrcode.reload()
@@ -432,7 +443,7 @@
         source: 'Address.png'
     Button:
         size_hint: 1, 0.2
-        text: "home"
+        text: "Back Home"
         font_size: '14sp'
         bold: True
         on_press: app.key_resp=""; root.clear_widgets(); root.add_widget(app.build_wallet_ui()); app.remove_qrcode()
@@ -479,7 +490,7 @@
                 size: self.size
     Button:
         size_hint: 1, 0.1
-        text: "home"
+        text: "Back Home"
         font_size: '14sp'
         bold: True
         on_press: app.keys_list=""; root.clear_widgets(); root.add_widget(app.build_wallet_ui())
@@ -534,13 +545,13 @@
         source: 'address.png'
     Button:
         size_hint: 1, 0.2
-        text: "Generate address QrCode"
+        text: "Generate Address QrCode"
         font_size: '14sp'
         bold: True
         on_press: app.get_key(keyNameForQrCode.text); address_qrcode.reload()
     Button:
         size_hint: 1, 0.2
-        text: "home"
+        text: "Back Home"
         font_size: '14sp'
         bold: True
         on_press: app.key_info=''; address_qrcode.text=''; app.remove_qrcode(); root.clear_widgets(); root.add_widget(app.build_wallet_ui())

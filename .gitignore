@@ -12,6 +12,6 @@ tmp/
 build/
 data/
 dist/
-address.txt
+addressBook.txt
 *.spec
 *.swp
